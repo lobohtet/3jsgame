@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+    <!-- Use Tailwind CSS for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Login</h1>
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username" name="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
+                Log In
+            </button>
+            <p id="message" class="text-center text-red-500 mt-4"></p>
+        </form>
+    </div>
+
+    <script>
+        // Wait for the HTML page to fully load
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // IMPORTANT: In a real website, this user data would be on a secure server, not in the code.
+            // This is a simple example to show how the logic works.
+            const userCredentials = {
+                'lobohtet': 'my_secret_password', // Example username and password
+                'minhtetnaing': 'mypass123'
+            };
+
+            const loginForm = document.getElementById('loginForm');
+            const messageElement = document.getElementById('message');
+
+            loginForm.addEventListener('submit', (event) => {
+                // Stop the form from submitting in the normal way
+                event.preventDefault();
+
+                // Get the values from the input fields
+                const usernameInput = document.getElementById('username').value;
+                const passwordInput = document.getElementById('password').value;
+
+                // Check if the username exists and the password is correct
+                if (userCredentials[usernameInput] === passwordInput) {
+                    // Login is successful!
+                    
+                    // Save login information in a cookie
+                    // A cookie is a small piece of data saved in the browser
+                    // Here we save the username for 1 day (86400 seconds)
+                    document.cookie = `username=${usernameInput}; max-age=${86400}; path=/`;
+
+                    // Show a success message
+                    messageElement.textContent = "Login successful! Redirecting...";
+                    messageElement.className = "text-center text-green-500 mt-4";
+
+                    // Redirect the user to the 'index.html' page
+                    window.location.href = 'index.html';
+                } else {
+                    // Login failed
+                    messageElement.textContent = "Invalid username or password.";
+                    messageElement.className = "text-center text-red-500 mt-4";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
