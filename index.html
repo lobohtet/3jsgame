@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Dodging Box</title>
+    <!-- Use the Tailwind CSS library for easy and beautiful styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Set a custom font for a clean look */
+        body {
+            font-family: 'Inter', sans-serif;
+            cursor: crosshair;
+        }
+        /* Add a smooth transition effect to the box for a nice animation */
+        #dodging-box {
+            transition: transform 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen overflow-hidden">
+
+    <!-- The box that will dodge the cursor -->
+    <div id="dodging-box" class="w-24 h-24 bg-purple-600 rounded-xl shadow-2xl absolute flex items-center justify-center text-white text-xs font-bold">
+        Catch Me!
+    </div>
+
+    <script>
+        // Get the box element from the HTML
+        const box = document.getElementById('dodging-box');
+
+        // Initial position for the box, centered on the screen
+        let boxX = window.innerWidth / 2 - box.offsetWidth / 2;
+        let boxY = window.innerHeight / 2 - box.offsetHeight / 2;
+
+        // A variable to track the last cursor position
+        let lastCursorX = 0;
+        let lastCursorY = 0;
+
+        // Set the initial position of the box
+        box.style.left = `${boxX}px`;
+        box.style.top = `${boxY}px`;
+
+        // How close the cursor needs to be to trigger the dodge
+        const dodgeThreshold = 150; // in pixels
+
+        // The strength of the dodge
+        const dodgeStrength = 1.2;
+
+        // Add an event listener to the window to track the mouse movement
+        window.addEventListener('mousemove', (event) => {
+            // Get the current cursor position
+            const cursorX = event.clientX;
+            const cursorY = event.clientY;
+
+            // Get the box's current position and dimensions
+            const boxRect = box.getBoundingClientRect();
+            const boxCenterX = boxRect.left + boxRect.width / 2;
+            const boxCenterY = boxRect.top + boxRect.height / 2;
+
+            // Calculate the distance between the cursor and the box's center
+            const distanceX = cursorX - boxCenterX;
+            const distanceY = cursorY - boxCenterY;
+            const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+            // Check if the cursor is within the dodging threshold
+            if (distance < dodgeThreshold) {
+                // Calculate the new position to move the box away from the cursor
+                let newBoxX = boxX - (distanceX / distance) * dodgeStrength * (dodgeThreshold - distance);
+                let newBoxY = boxY - (distanceY / distance) * dodgeStrength * (dodgeThreshold - distance);
+
+                // --- Ensure the box stays inside the screen boundaries ---
+
+                // Prevent the box from going past the left edge (0)
+                newBoxX = Math.max(newBoxX, 0);
+                // Prevent the box from going past the right edge
+                newBoxX = Math.min(newBoxX, window.innerWidth - boxRect.width);
+
+                // Prevent the box from going past the top edge (0)
+                newBoxY = Math.max(newBoxY, 0);
+                // Prevent the box from going past the bottom edge
+                newBoxY = Math.min(newBoxY, window.innerHeight - boxRect.height);
+
+                // Update the box's position with the new, clamped values
+                boxX = newBoxX;
+                boxY = newBoxY;
+                box.style.left = `${boxX}px`;
+                box.style.top = `${boxY}px`;
+            }
+        });
+    </script>
+</body>
+</html>
