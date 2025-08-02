@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login System</title>
+    <title>Login / Register</title>
     <!-- Use Tailwind CSS for easy styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -12,59 +12,135 @@
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
         }
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm">
-        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Login</h1>
-        <form id="loginForm" class="space-y-4">
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                <input type="text" id="username" name="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
-            </div>
-            <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
-                Log In
-            </button>
-            <p id="message" class="text-center text-red-500 mt-4"></p>
-        </form>
+        <!-- Title and toggle buttons -->
+        <div class="text-center mb-6">
+            <button id="showLoginBtn" class="py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition duration-300 bg-blue-600 text-white">Login</button>
+            <button id="showRegisterBtn" class="py-2 px-4 rounded-full text-sm font-medium focus:outline-none transition duration-300 text-blue-600 hover:bg-gray-200">Register</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginFormContainer" class="form-container active">
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Login</h1>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="loginUsername" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text" id="loginUsername" name="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="loginPassword" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
+                    Log In
+                </button>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="registerFormContainer" class="form-container">
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Register</h1>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label for="registerUsername" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text" id="registerUsername" name="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label for="registerPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="registerPassword" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300">
+                    Register
+                </button>
+            </form>
+        </div>
+        
+        <p id="message" class="text-center text-red-500 mt-4"></p>
     </div>
 
     <script>
         // Wait for the HTML page to fully load
         document.addEventListener('DOMContentLoaded', () => {
-
-            // IMPORTANT: In a real website, this user data would be on a secure server, not in the code.
-            // This is a simple example to show how the logic works.
-            const userCredentials = {
-                'lobohtet': 'my_secret_password', // Example username and password
-                'minhtetnaing': 'mypass123'
-            };
-
+            const showLoginBtn = document.getElementById('showLoginBtn');
+            const showRegisterBtn = document.getElementById('showRegisterBtn');
+            const loginFormContainer = document.getElementById('loginFormContainer');
+            const registerFormContainer = document.getElementById('registerFormContainer');
             const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
             const messageElement = document.getElementById('message');
 
-            loginForm.addEventListener('submit', (event) => {
-                // Stop the form from submitting in the normal way
+            // --- Functionality to switch between forms ---
+            showLoginBtn.addEventListener('click', () => {
+                loginFormContainer.classList.add('active');
+                registerFormContainer.classList.remove('active');
+                showLoginBtn.classList.add('bg-blue-600', 'text-white');
+                showLoginBtn.classList.remove('hover:bg-gray-200');
+                showRegisterBtn.classList.remove('bg-blue-600', 'text-white');
+                showRegisterBtn.classList.add('hover:bg-gray-200');
+                messageElement.textContent = ''; // Clear any previous messages
+            });
+
+            showRegisterBtn.addEventListener('click', () => {
+                loginFormContainer.classList.remove('active');
+                registerFormContainer.classList.add('active');
+                showRegisterBtn.classList.add('bg-blue-600', 'text-white');
+                showRegisterBtn.classList.remove('hover:bg-gray-200');
+                showLoginBtn.classList.remove('bg-blue-600', 'text-white');
+                showLoginBtn.classList.add('hover:bg-gray-200');
+                messageElement.textContent = ''; // Clear any previous messages
+            });
+
+            // --- Registration functionality ---
+            registerForm.addEventListener('submit', (event) => {
                 event.preventDefault();
 
-                // Get the values from the input fields
-                const usernameInput = document.getElementById('username').value;
-                const passwordInput = document.getElementById('password').value;
+                const username = document.getElementById('registerUsername').value;
+                const password = document.getElementById('registerPassword').value;
+
+                // Check if a user with this username already exists in localStorage
+                const users = JSON.parse(localStorage.getItem('users')) || {};
+                if (users[username]) {
+                    messageElement.textContent = "This username already exists. Please choose another.";
+                    messageElement.className = "text-center text-red-500 mt-4";
+                    return;
+                }
+
+                // If not, save the new user credentials in localStorage
+                users[username] = password;
+                localStorage.setItem('users', JSON.stringify(users));
+
+                messageElement.textContent = "Registration successful! You can now log in.";
+                messageElement.className = "text-center text-green-500 mt-4";
+
+                // Automatically switch to the login form
+                setTimeout(() => showLoginBtn.click(), 2000);
+            });
+
+            // --- Login functionality ---
+            loginForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const users = JSON.parse(localStorage.getItem('users')) || {};
 
                 // Check if the username exists and the password is correct
-                if (userCredentials[usernameInput] === passwordInput) {
+                if (users[username] === password) {
                     // Login is successful!
                     
                     // Save login information in a cookie
-                    // A cookie is a small piece of data saved in the browser
-                    // Here we save the username for 1 day (86400 seconds)
-                    document.cookie = `username=${usernameInput}; max-age=${86400}; path=/`;
+                    document.cookie = `username=${username}; max-age=${86400}; path=/`;
 
-                    // Show a success message
                     messageElement.textContent = "Login successful! Redirecting...";
                     messageElement.className = "text-center text-green-500 mt-4";
 
