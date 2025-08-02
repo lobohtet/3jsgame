@@ -17,7 +17,7 @@
 <body class="flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center">
         <div id="content">
-            <!-- Content will be added here by JavaScript -->
+            <!-- The welcome message or login button will be placed here by JavaScript -->
         </div>
     </div>
 
@@ -26,21 +26,19 @@
         document.addEventListener('DOMContentLoaded', () => {
             const contentDiv = document.getElementById('content');
 
-            // Function to get a cookie by its name
+            // This function gets the value of a cookie by its name
             function getCookie(name) {
                 const cookies = document.cookie.split(';');
                 for (let i = 0; i < cookies.length; i++) {
                     let cookie = cookies[i].trim();
-                    // Check if this cookie's name matches the one we want
                     if (cookie.startsWith(name + '=')) {
-                        // Return the value of the cookie
                         return cookie.substring(name.length + 1);
                     }
                 }
                 return null; // Return null if the cookie is not found
             }
 
-            // Get the username from the cookie
+            // Get the username from the cookie we saved on the login page
             const username = getCookie('username');
 
             if (username) {
@@ -54,80 +52,23 @@
                     </button>
                 `;
 
-                // Add an event listener to the logout button
+                // Add an event to the logout button
                 document.getElementById('logoutButton').addEventListener('click', () => {
-                    // Remove the cookie by setting its max-age to 0
+                    // This clears the cookie, so the user is logged out
                     document.cookie = 'username=; max-age=0; path=/';
-                    // Redirect to the login page
+                    // Go back to the login page
                     window.location.href = 'login.html';
                 });
 
             } else {
                 // If no username is found, the user is not logged in.
-                // Show a message and a login button.
+                // Show a message and a button to go to the login page.
                 contentDiv.innerHTML = `
                     <h1 class="text-3xl font-bold mb-4 text-gray-800">You are not logged in.</h1>
                     <a href="login.html" class="inline-block mt-6 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
                         Go to Login Page
                     </a>
                 `;
-            }
-        });
-    </script>
-</body>
-</html>
-        let lastCursorX = 0;
-        let lastCursorY = 0;
-
-        // Set the initial position of the box
-        box.style.left = `${boxX}px`;
-        box.style.top = `${boxY}px`;
-
-        // How close the cursor needs to be to trigger the dodge
-        const dodgeThreshold = 150; // in pixels
-
-        // The strength of the dodge
-        const dodgeStrength = 1.2;
-
-        // Add an event listener to the window to track the mouse movement
-        window.addEventListener('mousemove', (event) => {
-            // Get the current cursor position
-            const cursorX = event.clientX;
-            const cursorY = event.clientY;
-
-            // Get the box's current position and dimensions
-            const boxRect = box.getBoundingClientRect();
-            const boxCenterX = boxRect.left + boxRect.width / 2;
-            const boxCenterY = boxRect.top + boxRect.height / 2;
-
-            // Calculate the distance between the cursor and the box's center
-            const distanceX = cursorX - boxCenterX;
-            const distanceY = cursorY - boxCenterY;
-            const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-            // Check if the cursor is within the dodging threshold
-            if (distance < dodgeThreshold) {
-                // Calculate the new position to move the box away from the cursor
-                let newBoxX = boxX - (distanceX / distance) * dodgeStrength * (dodgeThreshold - distance);
-                let newBoxY = boxY - (distanceY / distance) * dodgeStrength * (dodgeThreshold - distance);
-
-                // --- Ensure the box stays inside the screen boundaries ---
-
-                // Prevent the box from going past the left edge (0)
-                newBoxX = Math.max(newBoxX, 0);
-                // Prevent the box from going past the right edge
-                newBoxX = Math.min(newBoxX, window.innerWidth - boxRect.width);
-
-                // Prevent the box from going past the top edge (0)
-                newBoxY = Math.max(newBoxY, 0);
-                // Prevent the box from going past the bottom edge
-                newBoxY = Math.min(newBoxY, window.innerHeight - boxRect.height);
-
-                // Update the box's position with the new, clamped values
-                boxX = newBoxX;
-                boxY = newBoxY;
-                box.style.left = `${boxX}px`;
-                box.style.top = `${boxY}px`;
             }
         });
     </script>
